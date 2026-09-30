@@ -13,15 +13,16 @@ input{width:100%;padding:12px;box-sizing:border-box;margin:8px 0 14px}
 </head>
 <body>
 <h1>Android Remote Lab</h1>
-<p>Kontrol transparan. Command yang tersedia: <b>OPEN_WHATSAPP</b>.</p>
+<p>Kontrol HP Android dari dashboard.</p>
 <label>Device token</label>
-<input id="token" type="password" autocomplete="off" placeholder="Masukkan DEVICE_TOKEN">
+<input id="token" type="password" autocomplete="off" placeholder="Masukkan token sekali">
 <div>
 <button id="health">Cek server</button>
 <button id="open">Buka WhatsApp</button>
-<button id="result">Cek hasil terakhir</button>
+<button id="result">Cek hasil</button>
 </div>
-<div id="status">Siap.</div>
+<h2>Status</h2>
+<div id="status">Belum dicek.</div>
 <script>
 const status=document.getElementById('status');
 const token=()=>document.getElementById('token').value.trim();
