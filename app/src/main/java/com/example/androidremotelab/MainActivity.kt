@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                 val body = (if (code in 200..299) c.inputStream else c.errorStream)?.bufferedReader()?.use { it.readText() } ?: ""
                 c.disconnect()
                 runOnUiThread {
-                    status.text = "HTTP $code\n$body"
+                    status.text = "HTTP " + code + "\n" + body
                     if (code in 200..299 && body.contains("OPEN_WHATSAPP")) { openWhatsApp(); reportResult(base, token, "OPEN_WHATSAPP", "ok") }
                 }
             } catch (e: Exception) { runOnUiThread { status.text = "Error: ${e.message ?: "unknown"}" } }
