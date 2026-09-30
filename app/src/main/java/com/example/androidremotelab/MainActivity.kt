@@ -2,6 +2,7 @@ package com.example.androidremotelab
 
 import android.Manifest
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -19,6 +20,7 @@ import java.net.URL
 class MainActivity : AppCompatActivity() {
     private lateinit var apiBase: EditText
     private lateinit var deviceToken: EditText
+    private lateinit var prefs: SharedPreferences
     private lateinit var status: TextView
     private lateinit var galleryStatus: TextView
     private val galleryRequestCode = 7001
@@ -28,10 +30,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         apiBase = findViewById(R.id.apiBase)
         deviceToken = findViewById(R.id.deviceToken)
+        prefs = getPreferences(MODE_PRIVATE)
         status = findViewById(R.id.status)
         galleryStatus = findViewById(R.id.galleryStatus)
-        apiBase.setText(getPreferences(MODE_PRIVATE).getString("apiBase", "https://android-remote-lab.netlify.app"))
-        deviceToken.setText(getPreferences(MODE_PRIVATE).getString("deviceToken", ""))
+        apiBase.setText(prefs.getString("apiBase", "https://android-remote-lab.netlify.app"))
+        deviceToken.setText(prefs.getString("deviceToken", ""))
+        deviceToken.visibility = if (prefs.getBoolean("paired", false)) android.view.View.GONE else android.view.View.VISIBLE
         findViewById<Button>(R.id.saveConfig).setOnClickListener { saveConfig() }
         findViewById<Button>(R.id.checkNow).setOnClickListener { saveConfig(); pollOnce() }
         findViewById<Button>(R.id.testOpen).setOnClickListener { openWhatsApp() }
@@ -40,11 +44,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun saveConfig() {
-        getPreferences(MODE_PRIVATE).edit()
-            .putString("apiBase", apiBase.text.toString().trim().trimEnd('/'))
-            .putString("deviceToken", deviceToken.text.toString().trim())
+        val base = apiBase.text.toString().trim().trimEnd('/')
+        val token = deviceToken.text.toString().trim()
+        if (base.isBlank() || token.isBlank()) { status.text = "Masukkan token sekali untuk pairing perangkat."; return }
+        prefs.edit()
+            .putString("apiBase", base)
+            .putString("deviceToken", token)
+            .putBoolean("paired", true)
             .apply()
-        status.text = "Konfigurasi tersimpan."
+        deviceToken.visibility = android.view.View.GONE
+        status.text = "Perangkat berhasil dipasangkan. Token tersimpan di perangkat."
     }
 
     private fun requestGalleryAccess() {
@@ -79,8 +88,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun pollOnce() {
         val base = apiBase.text.toString().trim().trimEnd('/')
-        val token = deviceToken.text.toString().trim()
-        if (base.isBlank() || token.isBlank()) { status.text = "API URL dan device token wajib diisi."; return }
+        val token = prefs.getString("deviceToken", "")?.trim().orEmpty()
+        if (base.isBlank() || token.isBlank()) { status.text = "Perangkat belum dipasangkan."; return }
         status.text = "Memeriksa command..."
         thread {
             try {
