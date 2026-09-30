@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace = "com.mongsodigital.remotelab"
+    namespace = "com.example.androidremotelab"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.mongsodigital.remotelab"
+        applicationId = "com.example.androidremotelab"
         minSdk = 26
         targetSdk = 35
-        versionCode = 5
-        versionName = "0.5"
+        versionCode = 6
+        versionName = "0.6"
     }
 
     compileOptions {
