@@ -37,10 +37,19 @@ class MainActivity : AppCompatActivity() {
         deviceToken.setText(prefs.getString("deviceToken", ""))
         deviceToken.visibility = if (prefs.getBoolean("paired", false)) android.view.View.GONE else android.view.View.VISIBLE
         findViewById<Button>(R.id.saveConfig).setOnClickListener { saveConfig() }
-        findViewById<Button>(R.id.checkNow).setOnClickListener { saveConfig(); pollOnce() }
+        findViewById<Button>(R.id.checkNow).setOnClickListener { saveConfigIfNeeded(); pollOnce() }
         findViewById<Button>(R.id.testOpen).setOnClickListener { openWhatsApp() }
         findViewById<Button>(R.id.requestGallery).setOnClickListener { requestGalleryAccess() }
         updateGalleryStatus()
+    }
+
+    private fun saveConfigIfNeeded() {
+        if (prefs.getBoolean("paired", false)) {
+            prefs.edit().putString("apiBase", apiBase.text.toString().trim().trimEnd('/')).apply()
+            status.text = "Konfigurasi tersimpan. Perangkat sudah dipasangkan."
+            return
+        }
+        saveConfig()
     }
 
     private fun saveConfig() {
