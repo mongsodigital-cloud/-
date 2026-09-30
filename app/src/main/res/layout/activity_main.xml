@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Transparent test agent. Command yang didukung: OPEN_WHATSAPP." />
+            android:text="Lab read-only: koneksi remote + viewer galeri perangkat." />
 
         <EditText
             android:id="@+id/apiBase"
@@ -58,6 +58,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="Tes buka WhatsApp" />
+
+        <Button
+            android:id="@+id/requestGallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Izinkan akses galeri" />
+
+        <TextView
+            android:id="@+id/galleryStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Galeri: belum diperiksa." />
 
         <TextView
             android:id="@+id/status"
